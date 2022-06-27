@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,10 +27,7 @@ public class FileService {
         return fileMapper.getFileByFileName(fileName);
     }
 
-    public int uploadFile(MultipartFile fileToUpload, Integer userId) throws IOException, FileSizeLimitExceededException {
-        if(fileToUpload.getSize() > 10000000) {
-            throw new FileSizeLimitExceededException("File is too large", fileToUpload.getSize(), 10000000);
-        }
+    public int uploadFile(MultipartFile fileToUpload, Integer userId) throws IOException, SizeLimitExceededException {
         File file = new File();
         file.setFileName(fileToUpload.getOriginalFilename());
         file.setContentType(fileToUpload.getContentType());

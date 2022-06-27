@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -41,7 +42,7 @@ public class FileController {
             }
 
             if(!fileToUpload.isEmpty() && fileToUpload.getSize() > 1000000) {
-                model.addAttribute("errorMessage", "File too big");
+                model.addAttribute("errorMessage", "File size too large for upload");
                 return "result";
             }
 
@@ -54,9 +55,6 @@ public class FileController {
             Integer userId = currentUser.getUserId();
             fileService.uploadFile(fileToUpload, userId);
             model.addAttribute("successMessage", "File has been uploaded successfully");
-        }
-        catch(FileSizeLimitExceededException fse) {
-            model.addAttribute("failureMessage", fse.getMessage());
         }
         catch(Exception e) {
             model.addAttribute("failureMessage", "Something went wrong, your changes were not saved. Please try again!");
